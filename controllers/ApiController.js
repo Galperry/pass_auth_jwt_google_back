@@ -8,8 +8,8 @@ exports.findAll = function (req, res) {
             let recordset = employees.recordset
             recordset = recordset.map(record => {
                 console.log(record)
-                const {Title, FirstName, LastName, EmployeeID} = record
-                return {Title, FirstName, LastName, EmployeeID}
+                const {Title, FirstName, LastName, EmployeeID, PhotoPath} = record
+                return {Title, FirstName, LastName, EmployeeID, PhotoPath}
             });
             res.json({error: false, message : 'success' ,recordset})
         }
@@ -19,15 +19,16 @@ exports.findAll = function (req, res) {
 
 
 exports.addEmployee = function (req, res) {
-    console.log("req.body.imgpath is------------", req.body.imgPath, "req.file-", req.file)
     const FirstName = req.body.FirstName
     const LastName = req.body.LastName
     const Title = req.body.Title
+    const PhotoPath = req.file.path
 
     let EmployeeData = {
         first_name: FirstName,
         last_name: LastName,
-        title: Title
+        title: Title,
+        photo_path: PhotoPath
     }
 
     Employee.create(EmployeeData, function (err) {

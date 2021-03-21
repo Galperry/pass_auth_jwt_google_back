@@ -16,8 +16,7 @@ var Employee = function (employee) {
 
 
 Employee.create = function (newEmp, result){
-    // dbConn.input('')
-    dbConn.query(`INSERT INTO Employees (Title, FirstName, LastName) values ('${newEmp.title}','${newEmp.first_name}','${newEmp.last_name}')`, function (err, res) {
+    dbConn.query(`INSERT INTO Employees (Title, FirstName, LastName, PhotoPath) values ('${newEmp.title}','${newEmp.first_name}','${newEmp.last_name}', '${newEmp.photo_path}')`, function (err, res) {
         if(err){
             console.log("error:", err)
             return result(err, null)
