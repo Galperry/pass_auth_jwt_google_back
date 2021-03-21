@@ -19,6 +19,7 @@ exports.findAll = function (req, res) {
 
 
 exports.addEmployee = function (req, res) {
+    console.log("req.body.imgpath is------------", req.body.imgPath, "req.file-", req.file)
     const FirstName = req.body.FirstName
     const LastName = req.body.LastName
     const Title = req.body.Title
@@ -116,16 +117,7 @@ exports.update = function (req, res) {
 
             });
         }
-        Employee.update(req.params.id, new Employee(employee), function (err, employee) {
-            if (err)
-                return res.send({error: true, message: err.message});
 
-            res.json({
-                error: false,
-                message: 'Employee successfully updated'
-            });
-
-        });
     }
 };
 

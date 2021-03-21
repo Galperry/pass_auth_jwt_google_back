@@ -6,7 +6,7 @@ const config = {
     user: 'sa',
     password: process.env.SQLSERVER_SA_PASS,
     server: 'localhost',
-    database: 'Northwind',
+    database: 'Northwnd',
     options: {
         encrypted: true,
         enableArithAbort: true
