@@ -3,7 +3,8 @@ var router = express.Router();
 var apiController = require('../controllers/ApiController')
 var multer = require('multer');
 var path = require('path')
-
+var passport = require('passport')
+var strategy = require('../strategies/jwt')
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -25,21 +26,20 @@ const fileFilter = (req, file, cb) => {
 
 router.use(multer({storage:storage, fileFilter:fileFilter}).single("yourImage"))
 
-
-
 /* RESTFUL API */
 
-router.get('/employees', apiController.findAll);
+router.get('/employees', passport.authenticate('jwt', { session: false }), apiController.findAll);
 
-router.get('/employees/:id', apiController.findOneEmployee);
+router.get('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.findOneEmployee);
 
-router.post('/employees', apiController.addEmployee);
+router.post('/employees', passport.authenticate('jwt', { session: false }), apiController.addEmployee);
 
-router.put('/employees/:id', apiController.update);
+router.put('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.update);
 
-router.patch('/employees/:id', apiController.update);
+router.patch('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.update);
 
-router.delete('/employees/:id', apiController.deleteEmployee);
+router.delete('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.deleteEmployee);
+
 
 
 module.exports = router;

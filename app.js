@@ -4,26 +4,26 @@ const cors = require("cors");
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var passport = require("passport")
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var employeesRouter = require('./routes/employees');
 var apiRouter = require('./routes/api');
 var imagesRouter = require('./routes/images');
+var loginRouter = require('./routes/login')
 
 
 var app = express();
 
-var corsOptions = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus:200,
-}
+// var corsOptions = {
+//   origin: "http://localhost:3000",
+//   optionsSuccessStatus:200,
+// }
 
 app.use(cors())
-app.use(express.json(corsOptions))
-
-
+app.use(express.json())
+app.use(passport.initialize());
 
 
 // view engine setup
@@ -41,6 +41,7 @@ app.use('/users', usersRouter);
 app.use('/employees', employeesRouter);
 app.use('/api', apiRouter);
 app.use('/uploads', imagesRouter);
+app.use('/login', loginRouter)
 
 
 // catch 404 and forward to error handler

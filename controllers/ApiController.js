@@ -1,22 +1,13 @@
-let Employee = require("../models/Employee")
+let Employee = require("../models/EmployeeMongo")
 
 exports.findAll = function (req, res) {
-    Employee.findAll(function (err, employees) {
-        if (err)
-            res.send(err)
-        else {
-            let recordset = employees.recordset
-            recordset = recordset.map(record => {
-                console.log(record)
-                const {Title, FirstName, LastName, EmployeeID, PhotoPath} = record
-                return {Title, FirstName, LastName, EmployeeID, PhotoPath}
-            });
-            res.json({error: false, message : 'success' ,recordset})
+    Employee.find({}, function(err,result){
+        if (err){
+            console.log(err)
         }
-
+        return res.json(result)
     })
 }
-
 
 exports.addEmployee = function (req, res) {
     const FirstName = req.body.FirstName
@@ -24,116 +15,71 @@ exports.addEmployee = function (req, res) {
     const Title = req.body.Title
     const PhotoPath = req.file.path
 
-    let EmployeeData = {
-        first_name: FirstName,
-        last_name: LastName,
-        title: Title,
-        photo_path: PhotoPath
+    const employee = {
+        FirstName: FirstName,
+        LastName: LastName,
+        Title: Title,
+        PhotoPath: PhotoPath
     }
 
-    Employee.create(EmployeeData, function (err) {
-        // console.log('In Employees controller , findAll')
-        if (err)
-            res.send(err)
-
-        else
-            res.json({error:false, message: 'Employee Added successfully'})
-
-    })
+    if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+        res.status(400).send({
+            error: true,
+            message: 'Please provide all required fields'
+        });
+    } else {
+        Employee.create(employee, function(err,message){
+            if (err){
+                console.log(err)
+            }
+            else{
+                return (res.json(message))
+            }
+        })
+    }
 }
 
 exports.findOneEmployee = function (req, res) {
-    Employee.findById(req.params.id, function (err, employee) {
-        if (err)
-            res.send(err)
-        else{
-            if (employee.recordset[0]){
-                const {
-                    Title,
-                    LastName,
-                    FirstName,
-                    EmployeeID
-                } = employee.recordset[0]
-                res.json({
-                    error: false,
-                    message: 'success',
-                    employee: {
-                        Title,
-                        LastName,
-                        FirstName,
-                        EmployeeID
-                    }
-                })
-
-            }else{
-                res.send({
-                    error: true,
-                    message: 'Can\'t find user'
-                })
-            }
-
+    Employee.findOne({_id:req.params.id}, function (err,result){
+        if (err){
+            console.log(err)
         }
+        return res.json(result)
     })
 }
 
 exports.update = function (req, res) {
     const employee = {
-        first_name: req.body.FirstName,
-        last_name: req.body.LastName,
-        title: req.body.Title,
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Title: req.body.Title,
+        PhotoPath: req.file.path
     }
+
     if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
         res.status(400).send({
             error: true,
-            message: 'Please provide all required field'
+            message: 'Please provide all required fields'
         });
     } else {
-        if(req.method === 'PATCH'){
-            Employee.patchUpdate(req.params.id, new Employee(employee), function (err, employee) {
-                if (err)
-                    return res.send({
-                        error: true,
-                        message: err.message,
-                        employee: employee
-                    });
-
-                res.json({
-                    error: false,
-                    message: 'Employee successfully updated'
-                });
-
-            });
-        }else{
-            Employee.update(req.params.id, new Employee(employee), function (err, employee) {
-                if (err)
-                    return res.send({
-                        error: true,
-                        message: err.message
-                    });
-
-                res.json({
-                    error: false,
-                    message: 'Employee successfully updated'
-                });
-
-            });
-        }
-
+        Employee.findByIdAndUpdate({_id:req.params.id},employee, function(err,message){
+            if (err){
+                console.log(err)
+            }
+            else{
+                return (res.json(message))
+            }
+        })
     }
 };
 
 exports.deleteEmployee = function (req, res) {
-    Employee.delete(req.params.id, function (err, employee) {
-        if (err)
-            res.send({
-                error: true,
-                message: err.message
-            });
-        else
-
-        res.json({
-            error: false,
-            message: 'Employee successfully deleted'
-        });
-    });
+    Employee.findByIdAndDelete({_id:req.params.id}, function(err,message){
+        if (err){
+            console.log(err)
+        }
+        else{
+            return (res.json(message))
+        }
+    })
 };

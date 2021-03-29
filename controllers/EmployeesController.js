@@ -2,7 +2,6 @@ let Employee = require("../models/Employee")
 
 exports.findAll = function (req,res) {
     Employee.findAll(function(err, employees){
-        // console.log('In Employees controller , findAll')
         if(err)
             res.send(err)
         else{
@@ -23,6 +22,7 @@ exports.addForm = function (req, res) {
 }
 
 exports.addEmployee = function(req, res){
+    console.log("got here")
     const FirstName = req.body.FirstName
     const LastName = req.body.LastName
     const Title = req.body.Title
