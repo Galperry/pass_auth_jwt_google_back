@@ -7,7 +7,7 @@ var logger = require('morgan');
 var passport = require("passport")
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// var usersRouter = require('./routes/users');
 var employeesRouter = require('./routes/employees');
 var apiRouter = require('./routes/api');
 var imagesRouter = require('./routes/images');
@@ -16,15 +16,9 @@ var loginRouter = require('./routes/login')
 
 var app = express();
 
-// var corsOptions = {
-//   origin: "http://localhost:3000",
-//   optionsSuccessStatus:200,
-// }
-
 app.use(cors())
 app.use(express.json())
 app.use(passport.initialize());
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,7 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 app.use('/employees', employeesRouter);
 app.use('/api', apiRouter);
 app.use('/uploads', imagesRouter);

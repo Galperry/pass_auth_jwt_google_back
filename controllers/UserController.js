@@ -11,8 +11,6 @@ exports.Login = function(req,res){
     if (req.body.password) {
          User.find({username}, function(err,result){
             bcrypt.compare(password, result[0].password, function (err,hash) {
-                console.log(hash)
-                
                 if (err)
                     console.log(err)
 

@@ -5,6 +5,11 @@ const jwt = require('jsonwebtoken')
 var UsersSchema = new Schema ({
     username: String,
     password: String,
+    googleId: String,
+    firstName: String,
+    lastName: String,
+    photo: String,
+    email: String,
 })
 
 UsersSchema.statics.generateAccessToken = function (userData){
