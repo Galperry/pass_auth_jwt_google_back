@@ -15,12 +15,11 @@ passport.deserializeUser((user, done) => {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:5000/login/google/callback",
-    passReqToCallback:true
+    callbackURL: "http://localhost:5000/login/google/callback"
   },
 
   
-  function(req,accessToken, refreshToken, profile, done) {
+  function(accessToken, refreshToken, profile, done) {
     const token = User.generateAccessToken({username:profile.displayName})
 
      var userData = {
@@ -29,13 +28,14 @@ passport.use(new GoogleStrategy({
       token
      };
 
-    const {
-      id: googleId, 
-      displayName: username, 
-      name:{givenName:firstName, familyName:lastName}, 
-      photos:[{value:photo}], 
-      emails: [{value:email}],
-    } = profile;
+    const newProfile = {
+      googleId:profile._json.sub,
+      firstName: profile._json.given_name,
+      lastName: profile._json.family_name,
+      email:profile._json.email,
+      username: profile._json.name,
+      photo: profile._json.picture
+    }
 
     const createUser = (userdata)=>{
       User.create(userdata)
@@ -43,7 +43,7 @@ passport.use(new GoogleStrategy({
     
     const getUser = (userid) => {
       return new Promise ((resolve, reject)=>{
-        User.find({googleId:userid}, (err,data)=>{
+        User.find({googleId : userid}, (err,data)=>{
           if (err){
             return reject("failure")
           }
@@ -52,25 +52,15 @@ passport.use(new GoogleStrategy({
       )})
     }
 
-    const user = {
-      googleId,
-      username,
-      firstName,
-      lastName,
-      photo,
-      email,
-    };
-
-    getUser(googleId).then(
+    getUser(profile._json.sub).then(
       (data)=>{
         if (data.length){
           done(null,data[0])
         }
         else{
-          createUser(user)
-          getUser(googleId)
+          createUser(newProfile)
+          getUser(profile._json.sub)
             .then(newUser => {
-              newUser;
               done(null, newUser[0]);
             })
             .catch(err => console.log(err));

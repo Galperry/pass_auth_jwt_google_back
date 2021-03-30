@@ -28,17 +28,17 @@ router.use(multer({storage:storage, fileFilter:fileFilter}).single("yourImage"))
 
 /* RESTFUL API */
 
-router.get('/employees', passport.authenticate('jwt', { session: false }), apiController.findAll);
+router.get('/employees', passport.authenticate('jwt'), apiController.findAll);
 
-router.get('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.findOneEmployee);
+router.get('/employees/:id', passport.authenticate('jwt'), apiController.findOneEmployee);
 
-router.post('/employees', passport.authenticate('jwt', { session: false }), apiController.addEmployee);
+router.post('/employees', passport.authenticate('jwt'), apiController.addEmployee);
 
-router.put('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.update);
+router.put('/employees/:id', passport.authenticate('jwt'), apiController.update);
 
-router.patch('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.update);
+router.patch('/employees/:id', passport.authenticate('jwt'), apiController.update);
 
-router.delete('/employees/:id', passport.authenticate('jwt', { session: false }), apiController.deleteEmployee);
+router.delete('/employees/:id', passport.authenticate('jwt'), apiController.deleteEmployee);
 
 
 
